@@ -26,17 +26,17 @@
 
   # SSH
     # This is the name of the SSH private key object in AWS
-    sshKey: "arch-key-1"
+    sshKey: "EUIRE"
     # This is the path to your local SSH private key located on your computer
     sshKeyPath:
 
   # AWS settings
     
-    uk_se_name: stephen archer
-    stack_name: F5-BIG-IP-LAB
-    aws_region: eu-west-2
+    uk_se_name: Col
+    stack_name: F5-Col-LAB
+    aws_region: eu-west-1
 
-    vpc_name: "arch_ansible_cft_demo"
+    vpc_name: "col_ansible_cft_demo"
     vpc_cidr: "10.3.0.0/16"
     vpc_subnets:
       mgmt_a:
