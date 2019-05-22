@@ -34,8 +34,8 @@
   vars:
 
     az_region: ukwest
-    rg_name: arch-ansible-rg-test
-    vnet_name: arch-ansible-vnet-test
+    rg_name: cg-ansible-rg-test
+    vnet_name: cg-ansible-vnet-test
     vnet_cidr: "10.3.0.0/16"
 
     vnet_subnets:
@@ -89,7 +89,7 @@
 
   - name: LAUNCH ARM TEMPLATE INTO AZURE  
     azure_rm_deployment:
-      state: absent
+      state: present
       resource_group_name: "{{ rg_name }}"
       template_link: "https://github.com/F5Networks/f5-azure-arm-templates/raw/master/supported/failover/same-net/via-api/n-nic/existing-stack/payg/azuredeploy.json"
       location: "{{ az_region }}"
@@ -110,7 +110,7 @@
         adminPasswordOrKey:
           value: "{{ f5_admin_pass }}"
         dnsLabel:
-          value: arch-f5
+          value: col-f5
         instanceName:
           value: big-ip
         instanceType:
@@ -119,10 +119,14 @@
           value: Best25Mbps
         bigIpVersion:
           value: 13.1.100000
+#        numberOfAdditionalNics:
+#          value: 0
+#        additionalNicLocation:
+#          value: OPTIONAL
         numberOfAdditionalNics:
-          value: 0
+          value: 1
         additionalNicLocation:
-          value: OPTIONAL
+          value: extra
         numberOfExternalIps:
           value: 1
         vnetName:
@@ -155,7 +159,7 @@
           value: "*"
         tagValues:
           value:
-            application: APP
+            application: AP
             cost: COST
             environment: ENV
             group: GROUP
