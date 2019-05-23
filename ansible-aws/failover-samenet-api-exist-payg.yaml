@@ -162,7 +162,7 @@
     wait_for:
       host: "{{ item }}"
       port: 22
-#      delay: 60
+      delay: 120
     loop:
       - "{{ my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.Bigip1ManagementEipAddress }}"
       - "{{ my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.Bigip2ManagementEipAddress }}"
