@@ -1,0 +1,40 @@
+---
+- name: SET PASSWORDS ON BIGIP
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ ec2_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ ec2_secret_key }}"
+    AWS_REGION: "{{ aws_region }}"
+    ANSIBLE_HOST_KEY_CHECKING: false
+    
+    
+  vars_files:
+    - ../../creds/aws_creds.yaml
+    - ../../creds/big_creds.yaml
+    - ./vars.yaml
+
+
+  tasks:
+  - name: SSH TO BIG-IPS AND ENABLE PASSWORD AUTH
+    bigip_command:
+      commands:
+        - modify auth user "{{ bigip_user }}" password "{{ bigip_pass }}" 
+        - save sys config
+      wait_for:
+        - result[1] contains done
+      provider:
+        server: "{{ item }}"
+        user: "{{ bigip_user }}"
+#        password: admin
+        transport: cli
+        ssh_keyfile: ~/.ssh/EUIRE2_rsa
+        validate_certs: no
+    register: ssh_output
+    delegate_to: localhost
+    loop:
+      - 34.246.118.84
+      - 99.80.212.202
+      
