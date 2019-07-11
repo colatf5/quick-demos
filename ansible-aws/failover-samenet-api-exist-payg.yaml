@@ -180,7 +180,7 @@
         user: "{{ bigip_user }}"
 #        password: "{{ bigip_pass }}"
         transport: cli
-        ssh_keyfile: ~/.ssh/EUIRE2_rsa
+        ssh_keyfile: ~/.ssh/EUIRE.pem
         validate_certs: no
     register: ssh_output
     delegate_to: localhost

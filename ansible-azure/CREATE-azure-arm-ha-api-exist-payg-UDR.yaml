@@ -146,7 +146,7 @@
           value: "*"
         tagValues:
           value:
-            application: APP
+            application: APP2
             cost: "SALES EMEA-UK 4261"
             environment: Demo
             group: "UK SE"
