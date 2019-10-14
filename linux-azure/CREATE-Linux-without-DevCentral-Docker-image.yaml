@@ -58,6 +58,11 @@
       resource_group: "{{ rg_name }}"
       address_prefixes_cidr:
           - "{{ vnet_cidr }}"
+      tags:
+        automated: "{{ automation_tool }}"
+        stack: "{{ stack_name }}"
+        UK-SE: "{{ uk_se_name }}"
+
 
   - name: CREATE SUBNET
     azure_rm_subnet:
@@ -65,6 +70,10 @@
       virtual_network_name: "{{ vnet_name }}"
       resource_group: "{{ rg_name }}"
       address_prefix_cidr: "{{ item.cidr }}"
+#      tags:
+#        automated: "{{ automation_tool }}"
+#        stack: "{{ stack_name }}"
+#        UK-SE: "{{ uk_se_name }}"
     with_items: "{{ vnet_subnets }}"
     register: create_vnet_subnets
 
@@ -73,87 +82,24 @@
     azure_rm_deployment:
       state: present
       resource_group_name: "{{ rg_name }}"
-      template_link: "https://github.com/F5Networks/f5-azure-arm-templates/raw/master/supported/failover/same-net/via-api/n-nic/existing-stack/payg/azuredeploy.json"
+      template_link: "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-linux/azuredeploy.json"
       location: "{{ az_region }}"
       client_id: "{{ az_client_id }}"
       tenant: "{{ az_tenant }}"
       secret: "{{ az_secret }}"
       parameters:
-        tenantId:
-          value: "{{ az_tenant }}"
-        clientId:
-          value: "{{ az_client_id }}"
-        servicePrincipalSecret:
-          value: "{{ az_secret }}"
         adminUsername:
           value: "{{ f5_admin_user }}"
         authenticationType:
-          value: password
+          value: sshPublicKey
         adminPasswordOrKey:
-          value: "{{ f5_admin_pass }}"
-        dnsLabel:
-          value: cg-f5
-        instanceName:
-          value: big-ip
-        instanceType:
-          value: Standard_DS3_v2
-        imageName:
-          value: Best25Mbps
-        bigIpVersion:
-          value: latest
-        numberOfAdditionalNics:
-          value: 0
-        additionalNicLocation:
-          value: OPTIONAL
-        numberOfExternalIps:
-          value: 1
-        vnetName:
-          value: "{{ vnet_name }}"
-        vnetResourceGroupName:
-          value: "{{ rg_name }}"
-        mgmtSubnetName:
-          value: "{{ vnet_subnets[0].name }}"
-        mgmtIpAddressRangeStart:
-          value: "{{ subnet_start }}.1.10"
-        externalSubnetName:
-          value: "{{ vnet_subnets[1].name }}"
-        externalIpSelfAddressRangeStart:
-          value: "{{ subnet_start }}.11.10"
-        externalIpAddressRangeStart:
-          value: "{{ subnet_start }}.11.100"
-        internalSubnetName:
-          value: "{{ vnet_subnets[2].name }}"
-        internalIpAddressRangeStart:
-          value: "{{ subnet_start }}.21.10"
-        managedRoutes:
-          value: 0.0.0.0/0,10.1.4.0/24,10.1.5.0/24
-        ntpServer:
-          value: 0.pool.ntp.org
-        timeZone:
-          value: UTC
-        customImage:
-          value: OPTIONAL 
-        restrictedSrcAddress:
-          value: "*"
-        tagValues:
-          value:
-            application: APP2
-            cost: "SALES EMEA-UK 4261"
-            environment: Demo
-            group: "UK SE"
-            owner: "{{ uk_se_name }}"
-            automated: "{{ automation_tool }}"
-            stack: "{{ stack_name }}"
-            UK-SE: "{{ uk_se_name }}"
-        allowUsageAnalytics:
-          value: 'Yes'
+          value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDEHcfEcI9hbkVCJjqZXBT3yG7mOJQb6Mw/QCO60aKA7nYX8C3FKNHzmY45o9oEn1EfytuD+WuFc9PSCMX5yvBrXIaGlajYQEohqOiEfjtdTZ1W8e2tWI6WcRLaAT5PXmDhk4N6jx6VcPA3s1ywej/IiH7GsOAVxf9qiUgG7PMz5xsqHQWiWCJHxOc5XXbP9Yrvb5W505bCEpeMbaGyn7sdNaYBOCBAcyAM6wAyBQpUBnVQpEpVIMJ7TrZz1Y1GF1eLw7LMEP8n9o7EpSDD8tXezwP9c8WC5wYAuUlo9NcCeGZ5rTT1VkdHXMekhK5EElEk5IQCplS3lyRX9Z0OBX9"
+        ubuntuOSVersion:
+          value: 16.04.0-LTS
+        dnsLabelPrefix:
+          value: "badger2687"
         #declarationUrl:  "NOT_SPECIFIED"
     ignore_errors: True
-
-  - name: OUTPUT WARNING ABOUT KNOW ISSUE WITH ADDTLNIC
-    debug:
-      msg: "The previous error referring to missing addtlnic is cosmetic.  F5 ARM templates need to use dependsOn for conditional resources, so unable to work-around the issue.  We can safely igmore and the BIG-IP devices deploy correctly."
-
     
 #------------------------------------------------------------------------------
 # TS Curl

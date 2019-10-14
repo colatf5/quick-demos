@@ -14,9 +14,9 @@
 # Finally, do not use spaces or unusual characters in the variable values!
 #
     uk_se_name: col
-    stack_name: ansible-f5-demo-build
+    stack_name: CG-demo-build
     
-    aws_region: eu-west-1
+    aws_region: eu-west-3
     subnet_start: "10.1"
     ANSIBLE_HOST_KEY_CHECKING: "false"
 #    
@@ -24,8 +24,8 @@
 #
     automation_tool: "ansible"
 
-    sshKey: "EUIRE"
-    ssh_key_file_path: "~/.ssh/EUIRE.pem"
+    sshKey: "ColPar"
+    ssh_key_file_path: "~/.ssh/ColPar.pem"
     
     vpc_name: "{{ uk_se_name }}-{{ stack_name }}"
     vpc_cidr: "{{ subnet_start }}.0.0/16"
